@@ -7,7 +7,7 @@ class RealParser :
         'key': '28e650e7-f611-4e98-a5ac-4f481f77922f',
     }
     headers = {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
     }
 
     def getParsingTag(self, text) :
