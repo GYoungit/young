@@ -457,11 +457,10 @@ class Ngram:
             self.parsingWord = self.__refinement_parsing_word(copy.deepcopy(self.parsingTaggingWord), self.need_tag, False)
 
             if self.__same_search(self.parsingTaggingWord):
-                self.c_word_search = False
-                return False
+                self.c_word_search = True
                 # raise CWordNotMatchingError
-        self.c_word_search = True
-        return True
+        self.c_word_search = False
+        return self.c_word_search
 
     # c_word 주변단어 뽑기
     def get_surround_word(self, surroundNumber=2, front=True, rear=False):
@@ -536,6 +535,6 @@ class Ngram:
 
 if __name__ == '__main__':
     na = Ngram()
-    na.set_sentence_and_cword("힘이 약한 철수는 단순 이동수단을 가지고 있어 편하게 짐을 옮겼다.", c_word="옮기다")
+    aa = na.set_sentence_and_cword("힘(파워)이 약한 철수는 단순 이동수단을 가지고 있어 편하게 짐을 옮겼다.")
     na.get_surround_word(surroundNumber=3, rear=True)
     srWeight = na.get_word_weight()
