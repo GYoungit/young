@@ -10,6 +10,7 @@ import sys
 ## 가끔씩 int형을 string형으로 인식하는 에러
 ## 특수문자 처리
 ## 오류나면 리포팅
+## 이름에 뛰어쓰기 있으면 오류나는거 수정
 
 
 class excelInfo :
@@ -89,6 +90,7 @@ class DbUtil :
         self.db_name = db_name
         self.charset = charset
 
+    # 위치 설정
     def __location_setting(self, now_location, start_location):
         # location setting
         if now_location == "" : now_location = os.getcwd()
@@ -105,6 +107,7 @@ class DbUtil :
 
         return location_list
 
+    # 해당 db의 column값 불러오기
     def __get_parameter(self):
         db = MySQLdb.connect(self.host, self.user, self.password, self.db_name, charset=self.charset)
         cur = db.cursor(MySQLdb.cursors.DictCursor)
@@ -115,6 +118,7 @@ class DbUtil :
 
         return results
 
+    # db 데이터 타입 가져오기
     def __get_data_type(self, data):
         try:
             time_list = re.split("[\-\/\.]", data)
@@ -158,7 +162,7 @@ class DbUtil :
 
         for column in range(self.excelinfo.startColumns, self.excelinfo.ncolumns):
             type_list.append(None)
-            meta_list.append(str(self.excelinfo.worksheet.cell_value(self.excelinfo.startRows, column)))
+            meta_list.append(str(self.excelinfo.worksheet.cell_value(self.excelinfo.startRows, column)).strip().replace(" ", "_"))
 
         for row in range(self.excelinfo.startRows + headNum, self.excelinfo.nrows) :
             row_data_list = []
@@ -267,18 +271,22 @@ class DbUtil :
         # 추가예정
         pass
 
+    # 추가 예정
     def __model_many_to_many(self):
         # 추가예정
         pass
 
+    # 추가 예정
     def __model_many_to_one(self):
         # 추가예정
         pass
 
+    # 추가 예정
     def __model_one_to_many(self):
         # 추가예정
         pass
 
+    # 추가 예정
     def __model_one_to_one(self):
         # 추가예정
         pass
@@ -315,7 +323,6 @@ class DbUtil :
 
         return excelinfo
 
-
     def __type_Converter(self, data, type):
         if str(type).find("varchar") != -1 or str(type) == "date" or str(type) == "text" :
             returnData = "'" + str(data) + "'"
@@ -333,7 +340,6 @@ class DbUtil :
                 returnData = "null"
 
         return returnData
-
 
     def __make_db_table_and_insert_data(self, make_table_name):
         # get excel param
@@ -386,7 +392,6 @@ class DbUtil :
             cur.execute(selectQuery)
 
             db.commit()
-
 
     def set_login_info(self, user, password):
         self.user = user
@@ -487,25 +492,25 @@ class ExcelDataNotReadError(Exception) :
         return "Excel Data Not Read"
 
 if __name__ == '__main__':
-    # argv
-    user_name = sys.argv[1]
-    password = sys.argv[2]
-    host = sys.argv[3]
-    db_name = sys.argv[4]
-    create_tableName = sys.argv[5]
-    excel_location = sys.argv[6]
+    # # argv
+    # user_name = sys.argv[1]
+    # password = sys.argv[2]
+    # host = sys.argv[3]
+    # db_name = sys.argv[4]
+    # create_tableName = sys.argv[5]
+    # excel_location = sys.argv[6]
+    #
+    # # db util
+    # dbutil = DbUtil()
+    # dbutil.set_db_info(db_name=db_name, host=host)
+    # dbutil.set_login_info(user=user_name, password=password)
+    #
+    # dbutil.excelToDB(create_tableName, excel_location)
+
 
     # db util
     dbutil = DbUtil()
-    dbutil.set_db_info(db_name=db_name, host=host)
-    dbutil.set_login_info(user=user_name, password=password)
+    dbutil.set_db_info(db_name="2017_point_business", host="203.230.103.21")
+    dbutil.set_login_info(user="ckAdmin", password="iip12345")
 
-    dbutil.excelToDB(create_tableName, excel_location)
-
-
-    # # db util
-    # dbutil = DbUtil()
-    # dbutil.set_db_info(db_name="ncs", host="localhost")
-    # dbutil.set_login_info(user="root", password="1313")
-    #
-    # dbutil.excelToDB("testtable", "D:/aa.xlsx")
+    dbutil.excelToDB("subject_week_info_test", "D:/강의계획서 2번.xlsx")
